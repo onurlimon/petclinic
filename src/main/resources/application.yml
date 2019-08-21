@@ -1,0 +1,6 @@
+logging :
+  level :
+      org.springframework.web: debug
+      org.springframework.jdbc.datasource: debug
+  file : C:\Users\Onur\Downloads\petclinic.log
+      
