@@ -21,7 +21,7 @@ import com.javaegitimleri.petclinic.model.Vet;
 @Transactional(rollbackFor = Exception.class)
 public class PetClinicServiceImpl implements PetClinicService {
 
-	private OwnerRepository burak;
+	private OwnerRepository ownerRepository;
 
 	private PetRepository petRepository;
 
@@ -37,7 +37,7 @@ public class PetClinicServiceImpl implements PetClinicService {
 
 	@Autowired
 	public void setOwnerRepository(OwnerRepository ownerRepository) {
-		this.burak = ownerRepository;
+		this.ownerRepository = ownerRepository;
 	}
 
 	@Autowired
@@ -49,19 +49,19 @@ public class PetClinicServiceImpl implements PetClinicService {
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	//@Secured(value = { "ROLE_USER", "ROLE_EDITOR" })
 	public List<Owner> findOwners() {
-		return burak.findAll();
+		return ownerRepository.findAll();
 	}
 
 	@Override
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public List<Owner> findOwners(String lastName) {
-		return burak.findByLastName(lastName);
+		return ownerRepository.findByLastName(lastName);
 	}
 
 	@Override
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public Owner findOwner(Long id) throws OwnerNotFoundException {
-		Owner owner = burak.findById(id);
+		Owner owner = ownerRepository.findById(id);
 		if (owner == null) {
 			throw new OwnerNotFoundException("Owner not found with id :" + id);
 		}
@@ -70,7 +70,7 @@ public class PetClinicServiceImpl implements PetClinicService {
 
 	@Override
 	public void createOwner(Owner owner) {
-		burak.create(owner);
+		ownerRepository.create(owner);
 
 		SimpleMailMessage msg = new SimpleMailMessage();
 		msg.setFrom("k@s");
@@ -83,13 +83,13 @@ public class PetClinicServiceImpl implements PetClinicService {
 
 	@Override
 	public void updateOwner(Owner owner) {
-		burak.update(owner);
+		ownerRepository.update(owner);
 	}
 
 	@Override
 	public void deleteOwner(Long id) {
 		petRepository.deleteByOwnerId(id);
-		burak.delete(id);
+		ownerRepository.delete(id);
 		// if(true) throw new RuntimeException("testing rollback...");
 	}
 
